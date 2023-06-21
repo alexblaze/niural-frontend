@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { useGetInvoice } from "../hooks/useInvoice";
 import { InvoiceItem } from "../types/types";
 import { slice, isEmpty, sumBy } from "lodash";
 
-const CustomTable = () => {
-  const { data, isLoading } = useGetInvoice();
+interface CustomTableProps {
+  invData: InvoiceItem[];
+}
 
+const CustomTable: React.FC<CustomTableProps> = ({ invData: data }) => {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<InvoiceItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  if (isLoading || !data) return <div>Loading</div>;
+  if (!data) return <div>Loading</div>;
 
   const calculateStatus = (dueDate: string) => {
     const today = new Date();

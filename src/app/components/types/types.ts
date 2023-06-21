@@ -86,3 +86,11 @@ export interface InvoiceItem {
   niural_due_date: string;
   total_amount: number;
 }
+
+export interface InvoiceState {
+  invoiceData: {
+    data: InvoiceItem[];
+    error: boolean;
+    page: number;
+  };
+}
