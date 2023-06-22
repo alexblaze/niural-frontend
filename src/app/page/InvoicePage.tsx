@@ -16,11 +16,31 @@ const InvoicePage: React.FC<InvoicePageProps> = ({ fetchTableData, data }) => {
     fetchTableData("CONTRACT_INVOICE");
   }, [fetchTableData]);
 
+  const columns = [
+    {
+      title: "Contract",
+      sortable: true,
+    },
+    {
+      title: "Description",
+    },
+    {
+      title: "Status",
+    },
+    {
+      title: "Invoices",
+    },
+    {
+      title: "Amount",
+      sortable: true,
+    },
+  ];
+
   return (
     <div>
       <TableSearch />
       <div>
-        <CustomTable invData={data} />
+        <CustomTable invData={data} columns={columns} selectable={true} />
       </div>
     </div>
   );

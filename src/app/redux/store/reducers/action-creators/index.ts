@@ -21,10 +21,10 @@ export const fetchTableData = (contract_type: string) => {
 
       // Show success toast message
       toast.success("Data retrieved successfully");
-    } catch (error) {
+    } catch (error: any) {
       // Handle any errors
       // You can dispatch an action or show an error message here
-      console.error("Error fetching invoice table:", error);
+      toast.error(error?.message);
     }
   };
 };

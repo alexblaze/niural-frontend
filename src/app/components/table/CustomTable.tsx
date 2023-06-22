@@ -1,16 +1,31 @@
 import React, { useState } from "react";
 import { InvoiceItem } from "../types/types";
 import { slice, isEmpty, sumBy } from "lodash";
+import CustomizedTableHeader from "./components/CustomizedTableHeader";
+import { Column } from "./types";
+import CustomizedCheckBox from "../checkbox/CustomizedCheckBox";
 
 interface CustomTableProps {
   invData: InvoiceItem[];
+  columns: Column[];
+  selectable: boolean;
 }
 
-const CustomTable: React.FC<CustomTableProps> = ({ invData: data }) => {
+const CustomTable: React.FC<CustomTableProps> = ({
+  invData: data,
+  columns,
+  selectable,
+}) => {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<InvoiceItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   if (!data) return <div>Loading</div>;
 
@@ -87,46 +102,44 @@ const CustomTable: React.FC<CustomTableProps> = ({ invData: data }) => {
     return contractName;
   };
 
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-  };
-
   const getPageRange = () => {
     const start = (currentPage - 1) * itemsPerPage + 1;
     const end = Math.min(start + itemsPerPage - 1, slicedData.length);
     return `${start}-${end}`;
   };
 
-  const totalPages = Math.ceil(slicedData.length / itemsPerPage);
+  const goToPreviousPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  const goToNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const goToSelectedPage = (selectedPage: number) => {
+    setCurrentPage(selectedPage);
+    setIsDropdownOpen(false);
+  };
 
   return (
     <div>
       <table className="min-w-full">
-        <thead>
-          <tr>
-            <th className="p-2">
-              <input
-                type="checkbox"
-                checked={selectAll}
-                onChange={handleSelectAll}
-              />
-            </th>
-            <th className="p-2">Contract</th>
-            <th className="p-2">Description</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">Invoices</th>
-            <th className="p-2">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
+        <CustomizedTableHeader
+          columns={columns}
+          selectable={selectable}
+          selectAll={selectAll}
+          handleSelectAll={handleSelectAll}
+        />
+        <tbody className="">
           {!isEmpty(slicedData) &&
             slicedData.map((item: InvoiceItem) => (
               <tr key={item.invoice_id}>
                 <td className="p-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedRows.includes(item)}
-                    onChange={() => handleSelectRow(item)}
+                  <CustomizedCheckBox
+                    selectedRows={selectedRows}
+                    handleSelectRow={handleSelectRow}
+                    item={item}
+                    selectable={false}
                   />
                 </td>
                 <td className="p-2">
@@ -148,28 +161,113 @@ const CustomTable: React.FC<CustomTableProps> = ({ invData: data }) => {
                 <td className="p-2">{"$ " + item.total_amount.toFixed(2)}</td>
               </tr>
             ))}
-          <tr>
-            <td className="p-2"></td>
-            <td className="p-2">Total:</td>
-            <td className="p-2"></td>
-            <td className="p-2"></td>
-            <td className="p-2"></td>
-            <td className="p-2">{"$ " + totalAmount.toFixed(2)}</td>
-          </tr>
-          <tr>
-            <td className="p-2"></td>
-            <td className="p-2" colSpan={5}>
-              Showing {getPageRange()} of {slicedData.length} items
-            </td>
-          </tr>
+          {!isEmpty(data) && (
+            <tr className="bg-neutral-light-50 ">
+              <td className="p-2 text-base font-semibold" colSpan={3}>
+                {selectedRows?.length + " Contracts Selected"}
+              </td>
+
+              <td className="p-2 text-base font-semibold">Total:</td>
+              <td className="p-2"></td>
+
+              <td className="p-2 text-base font-semibold">
+                {"$ " + totalAmount.toFixed(2)}
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
-      <div className="pagination">
-        {Array.from({ length: totalPages }).map((_, index) => (
-          <button key={index} onClick={() => goToPage(index + 1)}>
-            {index + 1}
+      <div className="p-2 flex justify-between ">
+        <div className="flex items-center">
+          Showing {getPageRange()} of {slicedData.length} items
+        </div>
+        <div className="pagination flex gap-3">
+          <button
+            className="bg-neutral-light-50 py-3 px-5 rounded-xl"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+          >
+            <svg
+              width="20"
+              height="21"
+              viewBox="0 0 20 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12.1429 14.7857L7.85718 10.4999L12.1429 6.21423"
+                fill="#14171C"
+              />
+              <path
+                d="M12.1429 14.7857L7.85718 10.4999L12.1429 6.21423"
+                stroke="#14171C"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
-        ))}
+
+          <div className="relative bg-neutral-light-50 py-3 px-5 rounded-xl">
+            <button className="flex" onClick={toggleDropdown}>
+              <span className="mr-6">{currentPage}</span>
+              <svg
+                width="22"
+                height="22"
+                className={`h-5 w-5 ${
+                  isDropdownOpen ? "transform rotate-180" : ""
+                }`}
+                viewBox="0 0 22 22"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M6.28577 8.64288L11.0001 13.3572L15.7143 8.64288"
+                  stroke="#14171C"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            {isDropdownOpen && (
+              <ul className="absolute z-10 w-full bg-white py-1 mt-1 border border-gray-300 rounded-md shadow-lg">
+                {Array.from({ length: totalPages }).map((_, index) => (
+                  <li
+                    key={index + 1}
+                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => goToSelectedPage(index + 1)}
+                  >
+                    {index + 1}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <button
+            className="bg-neutral-light-50 py-3 px-5 rounded-xl"
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages}
+          >
+            <svg
+              width="20"
+              height="21"
+              viewBox="0 0 20 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.85718 14.7857L12.1429 10.4999L7.85718 6.21423"
+                fill="#14171C"
+              />
+              <path
+                d="M7.85718 14.7857L12.1429 10.4999L7.85718 6.21423"
+                stroke="#14171C"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );

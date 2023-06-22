@@ -1,5 +1,5 @@
 import TableSearch from "app/components/search/TableSearch";
-import CustomTable from "app/components/table/CustomTable";
+// import CustomTable from "app/components/table/CustomTable";
 import React from "react";
 
 const BillingPage = () => {
