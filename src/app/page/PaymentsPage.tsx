@@ -1,11 +1,12 @@
 import CustomTableLayout from "app/components/layout/CustomTableLayout";
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
 
-interface PaymentsPageProps {
-  children: ReactNode;
-}
+// interface PaymentsPageProps {
+//   children: ReactNode;
+// }
 
-const PaymentsPage: React.FC<PaymentsPageProps> = ({ children }) => {
+const PaymentsPage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
 
@@ -92,7 +93,9 @@ const PaymentsPage: React.FC<PaymentsPageProps> = ({ children }) => {
           </div>
         </div>
       </div>
-      <CustomTableLayout>{children}</CustomTableLayout>
+      <CustomTableLayout>
+        <Outlet />
+      </CustomTableLayout>
     </div>
   );
 };

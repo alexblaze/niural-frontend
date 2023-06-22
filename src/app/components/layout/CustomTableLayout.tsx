@@ -4,6 +4,11 @@ interface CustomTableProps {
   children: ReactNode;
 }
 const CustomTableLayout: React.FC<CustomTableProps> = ({ children }) => {
+  const activeStyle = {
+    background: "#BAFBD6",
+    borderRadius: "8px",
+    color: "#077737",
+  };
   return (
     <div>
       <div className="py-10 px-6 border border-neutal-light-0 rounded-xl bg-neutral-light-0">
@@ -11,13 +16,15 @@ const CustomTableLayout: React.FC<CustomTableProps> = ({ children }) => {
           <div className="text-2xl font-bold">Your Invoices</div>
           <div className="p-1 border rounded-xl border-neutral-light-100">
             <NavLink
-              className="px-5 py-1 bg-primary-light-50 rounded-lg text-primary-light-800"
+              style={({ isActive }) => (isActive ? activeStyle : undefined)}
+              className="px-5 py-1  rounded-lg "
               to="/"
             >
               Invoice (4)
             </NavLink>
             <NavLink
-              className="px-5 py-1 bg-primary-light-50 rounded-lg"
+              style={({ isActive }) => (isActive ? activeStyle : undefined)}
+              className="px-5 py-1  rounded-lg"
               to="/billing"
             >
               Billing (2)
