@@ -1,5 +1,4 @@
 import React from "react";
-import { isEmpty } from "lodash";
 import { InvoiceItem } from "app/components/types/types";
 
 interface CustomizedTableFooterProps {
@@ -17,8 +16,6 @@ interface CustomizedTableFooterProps {
 }
 
 const CustomizedTableFooter: React.FC<CustomizedTableFooterProps> = ({
-  selectedRows,
-  totalAmount,
   slicedData,
   getPageRange,
   currentPage,

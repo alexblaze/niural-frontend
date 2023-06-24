@@ -1,26 +1,49 @@
-import { Action } from "app/redux/actions/invoiceTable";
 import { ActionType } from "./type";
-
+import { InvoiceData } from "app/components/types/types";
+export interface ActionFetchInvoice {
+  type: ActionType.FETCH_INVOICE_DATA | ActionType.FETCH_BILLING_DATA;
+  contract_type: string;
+  payload: InvoiceData;
+}
 const initialState = {
   error: null,
   data: [],
   page: 0,
 };
 
-const invoiceDataReducer = (state: object = initialState, action: Action) => {
+interface FetchInvoices {
+  type: ActionType.FETCH_INVOICE_DATA | ActionType.FETCH_BILLING_DATA;
+  payload: string;
+}
+
+export type Action = FetchInvoices;
+
+const invoiceDataReducer = (
+  state: object = initialState,
+  action: ActionFetchInvoice
+) => {
   switch (action.type) {
     case ActionType.FETCH_INVOICE_DATA:
       return fetchInvoiceData(action);
+    case ActionType.FETCH_BILLING_DATA:
+      return fetchBillingData(action);
     default:
       return state;
   }
 };
 
-const fetchInvoiceData = (action: any) => {
-  console.log(action);
+const fetchInvoiceData = (action: ActionFetchInvoice) => {
   let updatedStateData = {
     ...initialState,
     data: action?.payload?.items,
+  };
+  return updatedStateData;
+};
+
+const fetchBillingData = (action: ActionFetchInvoice) => {
+  let updatedStateData = {
+    ...initialState,
+    data: action?.payload,
   };
   return updatedStateData;
 };

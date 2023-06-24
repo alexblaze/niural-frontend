@@ -5,6 +5,7 @@ import CustomizedTableHeader from "./components/CustomizedTableHeader";
 import { Column } from "./types";
 import CustomizedTableFooter from "./components/CustomizedTableFooter";
 import CustomizedTableBody from "./components/CustomizedTableBody";
+import CustomizedBillingTableBody from "./components/CustomizedBillingTableBody";
 
 interface CustomTableProps {
   invData: InvoiceItem[];
@@ -131,15 +132,22 @@ const CustomTable: React.FC<CustomTableProps> = ({
           selectAll={selectAll}
           handleSelectAll={handleSelectAll}
         />
-        <CustomizedTableBody
-          slicedData={slicedData}
-          selectedRows={selectedRows}
-          handleSelectRow={handleSelectRow}
-          getDescription={getDescription}
-          calculateStatus={calculateStatus}
-          getContractName={getContractName}
-          totalAmount={totalAmount}
-        />
+        {selectable ? (
+          <CustomizedTableBody
+            slicedData={slicedData}
+            selectedRows={selectedRows}
+            handleSelectRow={handleSelectRow}
+            getDescription={getDescription}
+            calculateStatus={calculateStatus}
+            getContractName={getContractName}
+            totalAmount={totalAmount}
+          />
+        ) : (
+          <CustomizedBillingTableBody
+            slicedData={slicedData}
+            calculateStatus={calculateStatus}
+          />
+        )}
       </table>
       {!isEmpty(data) && (
         <CustomizedTableFooter

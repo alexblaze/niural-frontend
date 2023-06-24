@@ -49,7 +49,20 @@ const CustomizedTableBody: React.FC<CustomTableBodyProps> = ({
               </div>
             </td>
             <td className="p-2">{getDescription(item)}</td>
-            <td className="p-2">{calculateStatus(item.niural_due_date)}</td>
+            <td className="p-2">
+              <div className="flex gap-3 items-center">
+                <div
+                  className={`inline-block rounded-full w-2 h-2 ${
+                    calculateStatus(item.due_date) === "Overdue"
+                      ? "bg-error-light-500"
+                      : calculateStatus(item.due_date) === "Due Today"
+                      ? "bg-yellow-light-500"
+                      : "bg-primary-light-500"
+                  }`}
+                />
+                <div>{calculateStatus(item.niural_due_date)}</div>
+              </div>
+            </td>
             <td className="p-2"></td>
             <td className="p-2">{"$ " + item.total_amount.toFixed(2)}</td>
           </tr>

@@ -29,9 +29,9 @@ import { ActionType } from "./../../store/reducers/invoiceTable/type";
 //   };
 // };
 
-interface FetchInvoices {
-  type: ActionType.FETCH_INVOICE_DATA;
-  payload: string;
-}
+// interface FetchInvoices {
+//   type: ActionType.FETCH_INVOICE_DATA;
+//   payload: string;
+// }
 
-export type Action = FetchInvoices;
+// export type Action = FetchInvoices;
