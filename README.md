@@ -1,3 +1,5 @@
+Please change the auth token stored in .env to communicate with backend..
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
