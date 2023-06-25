@@ -1,6 +1,48 @@
-import React from "react";
+import React, { ChangeEvent, useEffect } from "react";
+import { InvoiceItem } from "../types/types";
 
-const TableSearch = () => {
+interface TableSearchProps {
+  data: InvoiceItem[];
+  filteredData: InvoiceItem[];
+  billingSearch: boolean;
+  setFilteredData: React.Dispatch<React.SetStateAction<InvoiceItem[]>>;
+}
+
+const TableSearch: React.FC<TableSearchProps> = ({
+  // filteredData,
+  data,
+  setFilteredData,
+  billingSearch,
+}) => {
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    const searchQuery = event.target.value.toLowerCase();
+    const filteredResults = data.filter((item) => {
+      // Customize the search condition based on your requirements
+      if (!billingSearch) {
+        return (
+          item.contract_title.toLowerCase().includes(searchQuery) ||
+          item.payer_name.toLowerCase().includes(searchQuery) ||
+          item.contract_type.toLowerCase().includes(searchQuery) ||
+          (item.due_date &&
+            typeof item.due_date === "string" &&
+            item.due_date.toLowerCase().includes(searchQuery))
+        );
+      }
+      return true; // Return true for all items when billingSearch is true
+    });
+
+    if (searchQuery === "") {
+      setFilteredData(data); // Show all data when the search query is empty
+    } else {
+      setFilteredData(filteredResults);
+    }
+  };
+
+  useEffect(() => {
+    setFilteredData(data); // Set the initial filtered data to the full data array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="flex items-center pb-7">
       <div className="relative flex-grow">
@@ -8,6 +50,7 @@ const TableSearch = () => {
           type="text"
           placeholder="Search by contract name, contractor name, contract type and date ..."
           className="pl-3 bg-neutral-light-50 pr-10 py-2 w-full rounded-md  focus:outline-none focus:border-primaryColor"
+          onChange={handleSearch}
         />
 
         <svg

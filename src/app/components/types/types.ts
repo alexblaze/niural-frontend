@@ -92,5 +92,6 @@ export interface InvoiceState {
     data: InvoiceItem[];
     error: boolean;
     page: number;
+    isLoading: boolean;
   };
 }

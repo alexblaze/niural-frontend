@@ -82,6 +82,8 @@ const CustomTable: React.FC<CustomTableProps> = ({
       return `${invoiceItem.description}  ${item.cycle_start_date} - ${item.cycle_end_date}`;
     } else if (item?.contract_type === "PAY_AS_YOU_GO") {
       return `Pay as you Go ${item?.contract_rate}`;
+    } else {
+      return `${item.cycle_start_date} - ${item.cycle_end_date}`;
     }
   };
 

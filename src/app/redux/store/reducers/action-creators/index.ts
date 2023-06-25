@@ -7,6 +7,7 @@ import { Action } from "../invoiceTable/invoiceDataReducer";
 export const fetchTableData = (contract_type: string) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
+      dispatch({ type: ActionType.SET_LOADING, payload: true });
       // Make the dynamic request using axios
       const { data } = await axiosInstance.get(
         `/invoices?statuses=PAYMENT_PENDING&types=${contract_type}`
@@ -25,6 +26,8 @@ export const fetchTableData = (contract_type: string) => {
       // Handle any errors
       // You can dispatch an action or show an error message here
       toast.error(error?.message);
+    } finally {
+      dispatch({ type: ActionType.SET_LOADING, payload: false });
     }
   };
 };
@@ -32,6 +35,8 @@ export const fetchTableData = (contract_type: string) => {
 export const fetchBillingTableData = () => {
   return async (dispatch: Dispatch<Action>) => {
     try {
+      dispatch({ type: ActionType.SET_LOADING, payload: true });
+
       const contractTypes = ["NIURAL_MASTER_INVOICE", "PAYROLL_INVOICE"];
       const requests = contractTypes.map(async (contract_type) => {
         const { data } = await axiosInstance.get(
@@ -58,6 +63,8 @@ export const fetchBillingTableData = () => {
       // Handle any errors
       // You can dispatch an action or show an error message here
       toast.error(error?.message);
+    } finally {
+      dispatch({ type: ActionType.SET_LOADING, payload: false });
     }
   };
 };

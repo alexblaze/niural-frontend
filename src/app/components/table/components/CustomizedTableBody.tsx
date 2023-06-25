@@ -38,17 +38,24 @@ const CustomizedTableBody: React.FC<CustomTableBodyProps> = ({
             <td className="p-2">
               <div>
                 <div className="flex">
-                  {item.contract_title}
+                  <div>{item.contract_title}</div>
                   {item.contract_document_type === "NIURAL_ARMOR" ? (
                     <img src="/assets/verified.svg" alt="verified" />
                   ) : (
                     <img src="/assets/unverified.svg" alt="unverified" />
                   )}
                 </div>
-                <div>{getContractName(item)}</div>
+                <div className="text-sm text-neutral-light-300">
+                  {getContractName(item)}
+                </div>
               </div>
             </td>
-            <td className="p-2">{getDescription(item)}</td>
+            <td className="p-2">
+              <div>{getDescription(item)}</div>
+              <div className="text-sm text-neutral-light-300">
+                {item?.invoice_id}
+              </div>
+            </td>
             <td className="p-2">
               <div className="flex gap-3 items-center">
                 <div
@@ -63,7 +70,19 @@ const CustomizedTableBody: React.FC<CustomTableBodyProps> = ({
                 <div>{calculateStatus(item.niural_due_date)}</div>
               </div>
             </td>
-            <td className="p-2"></td>
+            <td className="p-2">
+              <td className="p-2">
+                <div className="flex flex-col">
+                  <div className="font-semibold">{item.contract_title}</div>
+                  <div className="text-xs">{item.invoice_id}</div>
+                  {item.invoice_items?.length > 1 && (
+                    <div className="text-xs bg-blue-500 w-fit text-white rounded-full px-2 py-1 mt-1">
+                      {item.invoice_items?.length} items
+                    </div>
+                  )}
+                </div>
+              </td>
+            </td>
             <td className="p-2">{"$ " + item.total_amount.toFixed(2)}</td>
           </tr>
         ))}
